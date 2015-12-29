@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AndroidBeacons</string>
+    <string name="action_settings">Settings</string>
+</resources>
