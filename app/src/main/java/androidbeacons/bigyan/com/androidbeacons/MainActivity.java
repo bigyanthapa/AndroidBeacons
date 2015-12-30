@@ -48,62 +48,62 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
 
         //beacon manager
         String layout = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25";
-        beaconManager = BeaconManager.getInstanceForApplication(MainActivity.this);
+        beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(layout));
-        beaconManager.bind(MainActivity.this);
+        beaconManager.bind(this);
     } // Oncreate closes here
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        beaconManager.unbind(MainActivity.this);
+        beaconManager.unbind(this);
     }
 
     @Override
     public void onBeaconServiceConnect() {
-        final Region region = new Region("myBeacons" , Identifier.parse("//Replace UUID here"), null, null);
-                beaconManager.setMonitorNotifier(new MonitorNotifier() {
-                    @Override
-                    public void didEnterRegion(Region region) {
-                        try {
-                            Log.d(TAG, "didEnterRegion");
-                            beaconManager.startRangingBeaconsInRegion(region);
-                        } catch (RemoteException ex) {
-                            ex.printStackTrace();
-                        }
+        final Region region = new Region("myBeacons" , Identifier.parse("01122334-4556-6778-899A-ABBCCDDEEFF0"), null, null);
 
-                    }
 
-                    @Override
-                    public void didExitRegion(Region region) {
-                        try {
-                            Log.d(TAG, "didExitRegion");
-                            beaconManager.stopRangingBeaconsInRegion(region);
-                        } catch (RemoteException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void didDetermineStateForRegion(int i, Region region) {
-
-                    }
-                });
-
-                beaconManager.setRangeNotifier(new RangeNotifier() {
-                    @Override
-                    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                        for(Beacon oneBeacon : beacons){
-                            Log.d(TAG, "distance: "+oneBeacon.getDistance()+" id:"+ oneBeacon.getId1() +"/"+oneBeacon.getId2()+"/"+oneBeacon.getId3());
-                        }
-                    }
-                });
-
-                try{
-                    beaconManager.startMonitoringBeaconsInRegion(region);
-                }catch(RemoteException ex){
+        beaconManager.setMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(Region region) {
+                try {
+                    Log.d(TAG, "didEnterRegion");
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException ex) {
                     ex.printStackTrace();
                 }
+
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                try {
+                    Log.d(TAG, "didExitRegion");
+                    beaconManager.stopRangingBeaconsInRegion(region);
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            @Override
+            public void didDetermineStateForRegion(int i, Region region) {
+                    }
+        }); /** setMonitorNotifier ends here*/
+
+
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {for(Beacon oneBeacon : beacons){
+                Log.d(TAG, "distance: "+oneBeacon.getDistance()+" id:"+ oneBeacon.getId1() +"/"+oneBeacon.getId2()+"/"+oneBeacon.getId3());
+            }
+            }
+        }); /** setRangeNotifier ends here */
+
+        try{
+            beaconManager.startMonitoringBeaconsInRegion(region);
+        }catch(RemoteException ex){
+            ex.printStackTrace();
+        }
 
     }
 
